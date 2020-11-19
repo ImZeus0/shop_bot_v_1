@@ -3,6 +3,7 @@ from inline_keyboard import *
 from  aiogram.types import Message,ContentType
 from keyboard import *
 import logging
+from aiogram.types.callback_query import CallbackQuery
 from loader import _
 
 @dp.message_handler(commands=['check'])
@@ -15,7 +16,7 @@ async def login_user(m:Message):
     await m.answer(_("Привет!\nЭто описания твоего бота"),reply_markup=main_menu)
 
 @dp.message_handler(content_types=['text'])
-async def main_menu(m:Message):
+async def main(m:Message):
     if m.text == _("👤 Мой профиль"):
         bot_username = (await bot.get_me()).username
         id_user = m.chat.id
@@ -34,4 +35,7 @@ async def main_menu(m:Message):
         pass
 
 @dp.callback_query_handler(text_contains="choose_donate")
-async def choose_donate(call:CallbackQ):
+async def donate(call:CallbackQuery):
+    id_user = call.message.chat.id
+    await call.message.edit_text(_("Выберете тип оплати"))
+    await call.message.edit_reply_markup(choose_donate(id_user))
