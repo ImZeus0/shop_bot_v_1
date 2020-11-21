@@ -39,3 +39,22 @@ async def donate(call:CallbackQuery):
     id_user = call.message.chat.id
     await call.message.edit_text(_("Выберете тип оплати"))
     await call.message.edit_reply_markup(choose_donate(id_user))
+
+@dp.callback_query_handler(text_contains='donate_back')
+async def close_donate(call:CallbackQuery):
+    id_user = call.message.chat.id
+    balance = 0
+    referrals = 0
+    await call.message.edit_text(_(await account_info(id_user,balance,referrals)))
+    await call.message.edit_reply_markup(reply_markup=account_menu(id_user))
+
+
+async def account_info(id_user,balance,referrals):
+    bot_username = (await bot.get_me()).username
+    bot_link = 'http://t.me/{bot_name}?start={id_user}'.format(bot_name=bot_username, id_user=id_user)
+    return "<b>ЛИЧНИЙ КАБИНЕТ</b>\n\nID {id}\nБаланс {balance}\nКоличество рефералов {referrals}\nРеферальная ссылкa {ref_link}".format(
+        id=id_user,
+        balance=balance,
+        referrals=referrals,
+        ref_link=bot_link
+    )
