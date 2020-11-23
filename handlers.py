@@ -1,7 +1,9 @@
 from loader import bot,dp
 from inline_keyboard import *
 from  aiogram.types import Message,ContentType
+from aiogram.dispatcher import FSMContext
 from keyboard import *
+from state import Donate
 import logging
 from aiogram.types.callback_query import CallbackQuery
 from loader import _
@@ -36,9 +38,32 @@ async def main(m:Message):
 
 @dp.callback_query_handler(text_contains="choose_donate")
 async def donate(call:CallbackQuery):
+    await call.answer(cache_time=60)
     id_user = call.message.chat.id
     await call.message.edit_text(_("Выберете тип оплати"))
     await call.message.edit_reply_markup(choose_donate(id_user))
+
+@dp.callback_query_handler(donate_btc.filter())
+async  def donate_btc(call:CallbackQuery,callback_data : dict,state :FSMContext):
+    await call.answer(cache_time=60)
+    id_user = int(callback_data.get('id_user'))
+    await call.message.edit_text(_("Введите сумму $"))
+    await state.update_data(id_user = call.message.chat.id)
+    await Donate.enter_ammount.set()
+
+@dp.message_handler(state=Donate.enter_ammount)
+async  def enter_ammount(m: Message,state :FSMContext):
+    elem = await state.get_data()
+    await m.edit_text(elem['id_user'])
+    await state.finish()
+
+@dp.callback_query_handler(state=Donate.send_request)
+async  def enter_ammount(call: CallbackQuery,state :FSMContext):
+    await call.answer(cache_time=60)
+    elem = await state.get_data()
+    await call.message.edit_text()
+    await  state.finish()
+
 
 @dp.callback_query_handler(text_contains='donate_back')
 async def close_donate(call:CallbackQuery):
