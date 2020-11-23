@@ -1,4 +1,4 @@
-from loader import bot ,storage
+from loader import bot, storage
 from config import ADMIN
 
 
@@ -6,9 +6,9 @@ async def on_shutdown(dp):
     await bot.close()
     await storage.close()
 
-async  def on_startup(dp):
-    await bot.send_message(ADMIN,'---Start---')
 
+async def on_startup(dp):
+    await bot.send_message(ADMIN, '---Start---')
 
 
 if __name__ == '__main__':
