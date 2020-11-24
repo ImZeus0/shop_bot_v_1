@@ -6,10 +6,10 @@ ADMIN = 444800035
 # --server--
 IP = ""
 # --database--
-DB = ''
-USER = ''
-PASS = ''
-HOST = ''
+DB = 'shop_shema'
+USER = 'root'
+PASS = 'zeus7777'
+HOST = '127.0.0.1'
 PORT = 3306
 # --language--
 I18N_DOMAIN = 'shopbot'
