@@ -7,10 +7,6 @@ async def on_shutdown(dp):
     await storage.close()
 
 
-async def on_startup(dp):
-    await bot.send_message(ADMIN, '---Start---')
-
-
 if __name__ == '__main__':
     from aiogram import executor
     from handlers import dp
